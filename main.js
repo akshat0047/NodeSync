@@ -4,8 +4,12 @@ $(document).ready(function() {
   var pageURL;
   var date = new Date();
   var data;
+  var ajax;
 
   setInterval(() => {
+    if (ajax) {
+      ajax.abort();
+    }
     pageURL = $(location).attr("href");
     timestamp = $.now();
 
@@ -14,6 +18,9 @@ $(document).ready(function() {
   }, 60000);
 
   window.onbeforeunload = function() {
+    if (ajax) {
+      ajax.abort();
+    }
     pageURL = $(location).attr("href");
     timestamp = $.now();
     var seconds = date.getSeconds();
@@ -23,7 +30,7 @@ $(document).ready(function() {
 
   function clientServer(data) {
     console.log(data);
-    var ajax = $.ajax({
+    ajax = $.ajax({
       type: "POST",
       url: "http://127.0.0.1:4000/server",
       data: data,
